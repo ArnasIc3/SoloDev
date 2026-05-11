@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  taskId      String   @unique
+  title       String
+  description String?
+  status      String   @default("To Do")
+  priority    String   @default("Medium")
+  assignee    String   @default("AR")
+  storyPoints Int      @default(1)
+  sprintId    Int?
+  sprint      Sprint?  @relation(fields: [sprintId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Sprint {
+  id        Int      @id @default(autoincrement())
+  name      String
+  shortName String
+  goal      String?
+  startDate DateTime?
+  endDate   DateTime?
+  status    String    @default("planned")
+  tasks     Task[]
+  createdAt DateTime  @default(now())
+}
