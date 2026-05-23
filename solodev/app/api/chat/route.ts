@@ -20,11 +20,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "GEMINI_API_KEY not configured" }, { status: 500 });
   }
 
-  const { message, context } = await req.json();
+  const { message, context, projectContext } = await req.json();
 
   const prompt = `You are a concise AI project assistant embedded in a sprint management tool.
-
-Current project context:
+${projectContext ? `\nProject context:\n${projectContext}\n` : ""}
+Current sprint context:
 ${context}
 
 Respond ONLY with a JSON object in this exact shape:
@@ -43,7 +43,7 @@ Always return exactly 3 insights based on the current project context. Update th
 User: ${message}`;
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
