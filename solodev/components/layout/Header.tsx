@@ -1,12 +1,13 @@
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import type { Sprint } from "@/types";
 
 interface HeaderProps {
   activeSprint: Sprint;
   onCreateTask: () => void;
+  onMeeting?: () => void;
 }
 
-export function Header({ activeSprint, onCreateTask }: HeaderProps) {
+export function Header({ activeSprint, onCreateTask, onMeeting }: HeaderProps) {
   return (
     <header className="border-b border-zinc-800 bg-zinc-900/40 px-6 py-3.5 flex items-center justify-between flex-shrink-0">
       <div>
@@ -33,6 +34,15 @@ export function Header({ activeSprint, onCreateTask }: HeaderProps) {
             {activeSprint.endDate}
           </p>
         </div>
+        {onMeeting && (
+          <button
+            onClick={onMeeting}
+            className="flex items-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-violet-500/40 hover:text-violet-300 transition px-3.5 py-2 rounded-xl text-sm font-medium text-zinc-300"
+          >
+            <Users size={13} />
+            Team Meeting
+          </button>
+        )}
         <button
           onClick={onCreateTask}
           className="flex items-center gap-1.5 bg-violet-600 hover:bg-violet-500 transition px-3.5 py-2 rounded-xl text-sm font-medium"

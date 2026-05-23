@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Kanban, ListTodo, Bot } from "lucide-react";
+import { LayoutDashboard, Kanban, ListTodo, MessageSquare, Settings } from "lucide-react";
 import type { Sprint, TeamMember } from "@/types";
 
 interface SidebarProps {
@@ -8,13 +8,15 @@ interface SidebarProps {
   teamMembers: TeamMember[];
   activeView: string;
   onViewChange: (view: string) => void;
+  onOpenSettings: () => void;
+  hasProjectContext: boolean;
 }
 
 const navItems = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "sprint", label: "Sprint Board", icon: Kanban },
-  { id: "backlog", label: "Backlog", icon: ListTodo },
-  { id: "ai", label: "AI Assistant", icon: Bot },
+  { id: "dashboard", label: "Dashboard",  icon: LayoutDashboard },
+  { id: "sprint",    label: "Sprints",    icon: Kanban },
+  { id: "backlog",   label: "Backlog",    icon: ListTodo },
+  { id: "meetings",  label: "Meetings",   icon: MessageSquare },
 ];
 
 export function Sidebar({
@@ -22,6 +24,8 @@ export function Sidebar({
   teamMembers,
   activeView,
   onViewChange,
+  onOpenSettings,
+  hasProjectContext,
 }: SidebarProps) {
   return (
     <aside className="w-60 border-r border-zinc-800 bg-zinc-900/60 flex-col hidden lg:flex flex-shrink-0">
@@ -77,6 +81,22 @@ export function Sidebar({
             Ends {activeSprint.endDate}
           </p>
         </div>
+      </div>
+
+      {/* Project Context button */}
+      <div className="px-3 pb-2 border-t border-zinc-800 pt-2">
+        <button
+          onClick={onOpenSettings}
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition text-zinc-400 hover:bg-zinc-800 hover:text-white"
+        >
+          <Settings size={14} />
+          <span className="flex-1 text-left">Project Context</span>
+          {hasProjectContext ? (
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/20">Set</span>
+          ) : (
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/20">Empty</span>
+          )}
+        </button>
       </div>
 
       {/* Team */}
