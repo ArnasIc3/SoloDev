@@ -14,17 +14,18 @@ export interface Task {
   priority: TaskPriority;
   assignee: string;
   storyPoints: number;
-  sprintId: string;
+  sprintId: number | null;
+  aiOutput?: string;
 }
 
 export interface Sprint {
-  id: string;
+  id: number;
   name: string;
   shortName: string;
   goal: string;
   status: "planned" | "active" | "completed";
-  startDate: string;
-  endDate: string;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 export interface TeamMember {

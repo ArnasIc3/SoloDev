@@ -17,12 +17,13 @@ model Task {
   storyPoints Int      @default(1)
   sprintId    Int?
   sprint      Sprint?  @relation(fields: [sprintId], references: [id])
+  aiOutput    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Sprint {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
   shortName String
   goal      String?
@@ -31,4 +32,33 @@ model Sprint {
   status    String    @default("planned")
   tasks     Task[]
   createdAt DateTime  @default(now())
+}
+
+model TeamMember {
+  id       String  @id
+  initials String
+  name     String
+  role     String
+  isAI     Boolean @default(false)
+  color    String
+}
+
+model Meeting {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  taskId      String?
+  taskTitle   String?
+  sprintName  String?
+  messages    String
+  createdAt   DateTime @default(now())
+}
+
+model ProjectSettings {
+  id          Int      @id @default(autoincrement())
+  name        String   @default("My Project")
+  techStack   String   @default("")
+  domain      String   @default("")
+  description String   @default("")
+  updatedAt   DateTime @updatedAt
 }

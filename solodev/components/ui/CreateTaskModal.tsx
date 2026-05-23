@@ -12,7 +12,6 @@ interface CreateTaskModalProps {
   onCreateTask: (task: Task) => void;
   sprints: Sprint[];
   teamMembers: TeamMember[];
-  existingTaskCount: number;
 }
 
 export function CreateTaskModal({
@@ -21,15 +20,14 @@ export function CreateTaskModal({
   onCreateTask,
   sprints,
   teamMembers,
-  existingTaskCount,
 }: CreateTaskModalProps) {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [priority, setPriority] = React.useState<TaskPriority>("Medium");
   const [assignee, setAssignee] = React.useState("AR");
   const [storyPoints, setStoryPoints] = React.useState(2);
-  const [sprintId, setSprintId] = React.useState(
-    sprints.find((s) => s.status === "active")?.id ?? sprints[0].id,
+  const [sprintId, setSprintId] = React.useState<number | null>(
+    sprints.find((s) => s.status === "active")?.id ?? sprints[0]?.id ?? null,
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,7 +35,7 @@ export function CreateTaskModal({
     if (!title.trim()) return;
 
     onCreateTask({
-      id: `SM-${existingTaskCount + 1}`,
+      id: "",
       title: title.trim(),
       description: description.trim() || undefined,
       status: "To Do",
@@ -160,8 +158,8 @@ export function CreateTaskModal({
                   Sprint
                 </label>
                 <select
-                  value={sprintId}
-                  onChange={(e) => setSprintId(e.target.value)}
+                  value={sprintId ?? ""}
+                  onChange={(e) => setSprintId(e.target.value ? Number(e.target.value) : null)}
                   className={inputClass}
                 >
                   {sprints.map((s) => (
