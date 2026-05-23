@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
 import type { Task, TaskStatus } from "@/types";
 import { priorityStyles, assigneeColors } from "@/lib/styles";
@@ -16,10 +16,12 @@ const WORKFLOW: TaskStatus[] = [
 interface TaskCardProps {
   task: Task;
   index: number;
+  isProcessing?: boolean;
   onMoveTask: (taskId: string, status: TaskStatus) => void;
+  onTaskClick: (task: Task) => void;
 }
 
-export function TaskCard({ task, index, onMoveTask }: TaskCardProps) {
+export function TaskCard({ task, index, isProcessing = false, onMoveTask, onTaskClick }: TaskCardProps) {
   const currentIdx = WORKFLOW.indexOf(task.status);
   const canAdvance = currentIdx < WORKFLOW.length - 1;
   const nextStatus = canAdvance ? WORKFLOW[currentIdx + 1] : null;
@@ -33,12 +35,23 @@ export function TaskCard({ task, index, onMoveTask }: TaskCardProps) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`bg-zinc-800 border rounded-lg p-2.5 transition-all select-none ${
+          onClick={() => !snapshot.isDragging && onTaskClick(task)}
+          className={`bg-zinc-800 border rounded-lg p-2.5 transition-all select-none cursor-pointer ${
             snapshot.isDragging
               ? "border-violet-500 shadow-xl shadow-violet-500/20 rotate-1 scale-[1.02]"
+              : isProcessing
+              ? "border-blue-500/40 shadow-md shadow-blue-500/10"
               : "border-zinc-700 hover:border-violet-500/40"
           }`}
         >
+          {/* AI Processing indicator */}
+          {isProcessing && (
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Loader2 size={10} className="animate-spin text-blue-400 flex-shrink-0" />
+              <span className="text-[9px] text-blue-400 font-medium">AI processing...</span>
+            </div>
+          )}
+
           {/* ID + Priority */}
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] text-zinc-500 font-mono">

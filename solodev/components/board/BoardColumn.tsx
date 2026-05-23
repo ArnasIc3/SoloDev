@@ -9,9 +9,11 @@ interface BoardColumnProps {
   status: TaskStatus;
   tasks: Task[];
   onMoveTask: (taskId: string, status: TaskStatus) => void;
+  onTaskClick: (task: Task) => void;
+  processingTaskIds?: Set<string>;
 }
 
-export function BoardColumn({ status, tasks, onMoveTask }: BoardColumnProps) {
+export function BoardColumn({ status, tasks, onMoveTask, onTaskClick, processingTaskIds }: BoardColumnProps) {
   const dot = columnDotColor[status];
 
   return (
@@ -42,7 +44,9 @@ export function BoardColumn({ status, tasks, onMoveTask }: BoardColumnProps) {
                 key={task.id}
                 task={task}
                 index={i}
+                isProcessing={processingTaskIds?.has(task.id)}
                 onMoveTask={onMoveTask}
+                onTaskClick={onTaskClick}
               />
             ))}
             {provided.placeholder}

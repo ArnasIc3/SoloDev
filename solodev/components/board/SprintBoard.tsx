@@ -15,9 +15,11 @@ const COLUMNS: TaskStatus[] = [
 interface SprintBoardProps {
   tasks: Task[];
   onMoveTask: (taskId: string, status: TaskStatus) => void;
+  onTaskClick: (task: Task) => void;
+  processingTaskIds?: Set<string>;
 }
 
-export function SprintBoard({ tasks, onMoveTask }: SprintBoardProps) {
+export function SprintBoard({ tasks, onMoveTask, onTaskClick, processingTaskIds }: SprintBoardProps) {
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     const newStatus = result.destination.droppableId as TaskStatus;
@@ -34,6 +36,8 @@ export function SprintBoard({ tasks, onMoveTask }: SprintBoardProps) {
             status={status}
             tasks={tasks.filter((t) => t.status === status)}
             onMoveTask={onMoveTask}
+            onTaskClick={onTaskClick}
+            processingTaskIds={processingTaskIds}
           />
         ))}
       </div>
