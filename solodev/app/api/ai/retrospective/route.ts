@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     }),
   ];
 
-  const prompt = `You are Atlas AI, the Scrum Master AI in SoloDev. Generate a sprint retrospective based on actual sprint data.
+  const prompt = `You are Atlas AI, the Scrum Master AI in SoloSynq.ai. Generate a sprint retrospective based on actual sprint data.
 
 ${contextLines.join("\n")}
 

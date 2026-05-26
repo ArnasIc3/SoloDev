@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     `Team: ${teamMembers.map((m: { name: string; id: string; isAI: boolean }) => `${m.name} (${m.id})${m.isAI ? " [AI]" : ""}`).join(", ")}`,
   ];
 
-  const prompt = `You are Atlas AI, the Scrum Master AI in SoloDev. Analyze the current sprint health and identify real issues based on the actual task data.
+  const prompt = `You are Atlas AI, the Scrum Master AI in SoloSynq.ai. Analyze the current sprint health and identify real issues based on the actual task data.
 ${projectContext ? `\nPROJECT CONTEXT:\n${projectContext}\n` : ""}
 ${contextLines.join("\n")}
 

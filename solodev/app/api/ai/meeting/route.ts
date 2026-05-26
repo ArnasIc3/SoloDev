@@ -8,12 +8,12 @@ interface HistoryMessage {
   text: string;
 }
 
-function formatHistory(history: HistoryMessage[]): string {
+function formatHistory(history: HistoryMessage[], userName: string): string {
   if (!history.length) return "No previous messages.";
   return history
     .filter((m) => m.speaker !== "SYSTEM")
     .map((m) => {
-      const name = m.speaker === "AR" ? "Arnas" : m.speaker === "AI" ? "Atlas AI" : "Nova AI";
+      const name = m.speaker === "AR" ? userName : m.speaker === "AI" ? "Atlas AI" : "Nova AI";
       return `${name}: ${m.text}`;
     })
     .join("\n");
@@ -21,9 +21,13 @@ function formatHistory(history: HistoryMessage[]): string {
 
 const TASK_CREATION_KEYWORDS = [
   "create a task", "create task", "add a task", "add task",
+  "make a task", "make task", "new task",
   "schedule a task", "schedule task", "add to backlog", "put in backlog",
-  "log a task", "log task", "create a ticket", "add a ticket",
+  "log a task", "log task", "create a ticket", "add a ticket", "new ticket",
+  "add to sprint", "put in sprint", "add this to the sprint",
+  "track this", "track it", "let's track",
   "sukurk task", "pridek task", "pridėk task", "sukurk užduotį",
+  "pridek i backlog", "pridėk į backlogą",
 ];
 
 export function messageRequestsTaskCreation(message: string): boolean {
@@ -38,9 +42,10 @@ function buildAtlasPrompt(
   projectContext: string,
   previousMeetingsContext: string,
   allowTaskCreation: boolean,
+  userName: string,
 ): string {
   const taskSection = allowTaskCreation ? `
-You have ONE special capability in this message: if Arnas asked you to create/add a task, include a "createTask" field.
+You have ONE special capability in this message: if ${userName} asked you to create/add a task, include a "createTask" field.
 
 CRITICAL RULES about task creation:
 - If you include "createTask" in JSON → your reply text MUST say "I'm creating task: [title]"
@@ -64,17 +69,17 @@ If you decide NOT to create a task, omit "createTask" entirely:
 { "reply": "your response (no mention of creating tasks)" }` : `
 Respond with JSON ONLY: { "reply": "your 2-4 sentence conversational response" }`;
 
-  return `You are Atlas AI, an AI Developer participating in a team meeting inside SoloDev — a Scrum project management tool.
+  return `You are Atlas AI, an AI Developer participating in a team meeting inside SoloSynq.ai — a Scrum project management tool.
 
-Meeting participants: Arnas (Developer), Atlas AI (you — Developer), Nova AI (Reviewer).
+Meeting participants: ${userName} (Developer), Atlas AI (you — Developer), Nova AI (Reviewer).
 ${projectContext ? `\nProject context:\n${projectContext}\n` : ""}${previousMeetingsContext ? `\n${previousMeetingsContext}\n` : ""}
 Current meeting topic / context:
 ${meetingContext || "General sprint discussion"}
 
 Current conversation:
-${formatHistory(history)}
+${formatHistory(history, userName)}
 
-Arnas just said: "${message}"
+${userName} just said: "${message}"
 
 Respond as Atlas AI from a developer's perspective. Be concrete, practical, and direct. Keep it to 2-4 sentences.
 ${taskSection}`;
@@ -87,18 +92,19 @@ function buildNovaPrompt(
   projectContext: string,
   previousMeetingsContext: string,
   atlasReply: string,
+  userName: string,
 ): string {
-  return `You are Nova AI, an AI Code Reviewer participating in a team meeting inside SoloDev.
+  return `You are Nova AI, an AI Code Reviewer participating in a team meeting inside SoloSynq.ai.
 
-Meeting participants: Arnas (Developer), Atlas AI (Developer), Nova AI (you — Reviewer).
+Meeting participants: ${userName} (Developer), Atlas AI (Developer), Nova AI (you — Reviewer).
 ${projectContext ? `\nProject context:\n${projectContext}\n` : ""}${previousMeetingsContext ? `\n${previousMeetingsContext}\n` : ""}
 Current meeting topic / context:
 ${meetingContext || "General sprint discussion"}
 
 Current conversation:
-${formatHistory(history)}
+${formatHistory(history, userName)}
 
-Arnas just said: "${message}"
+${userName} just said: "${message}"
 Atlas AI just responded: "${atlasReply}"
 
 Respond as Nova AI from a quality/review perspective. Add a complementary viewpoint, flag risks, or validate Atlas's approach.
@@ -133,7 +139,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "GEMINI_API_KEY not configured" }, { status: 500 });
   }
 
-  const { message, history = [], meetingContext = "", projectContext = "", previousMeetingsContext = "" } = await req.json();
+  const {
+    message,
+    history = [],
+    meetingContext = "",
+    projectContext = "",
+    previousMeetingsContext = "",
+    userName = "Developer",
+  } = await req.json();
 
   if (!message?.trim()) {
     return NextResponse.json({ error: "message is required" }, { status: 400 });
@@ -144,7 +157,7 @@ export async function POST(req: NextRequest) {
   try {
     const atlasRaw = await callGemini(
       apiKey,
-      buildAtlasPrompt(message, history, meetingContext, projectContext, previousMeetingsContext, allowTaskCreation),
+      buildAtlasPrompt(message, history, meetingContext, projectContext, previousMeetingsContext, allowTaskCreation, userName),
       true,
     );
 
@@ -163,7 +176,7 @@ export async function POST(req: NextRequest) {
 
     const novaReply = await callGemini(
       apiKey,
-      buildNovaPrompt(message, history, meetingContext, projectContext, previousMeetingsContext, atlasReply),
+      buildNovaPrompt(message, history, meetingContext, projectContext, previousMeetingsContext, atlasReply, userName),
     );
 
     return NextResponse.json({ atlasReply, novaReply, createTask });

@@ -12,11 +12,11 @@ const STATUS_NEXT: Record<string, string> = {
   "Testing":     "Done",
 };
 
-function buildAtlasPrompt(task: Record<string, unknown>, sprintContext: string): string {
-  return `You are Atlas AI, an AI Developer advisor in SoloDev — a Scrum project management tool.
+function buildAtlasPrompt(task: Record<string, unknown>, sprintContext: string, userName: string): string {
+  return `You are Atlas AI, an AI Developer advisor in SoloSynq.ai — a Scrum project management tool.
 
-You are planning this task for the human developer (Arnas) to implement.
-Your role is NOT to simulate doing the work — provide a clear, actionable implementation plan so Arnas can execute it efficiently.
+You are planning this task for the human developer (${userName}) to implement.
+Your role is NOT to simulate doing the work — provide a clear, actionable implementation plan so ${userName} can execute it efficiently.
 
 TASK:
 - ID: ${task.id}
@@ -44,14 +44,14 @@ Respond ONLY with a JSON object:
   "potentialChallenges": ["Edge case or pitfall to watch for"],
   "estimatedComplexity": "Low",
   "nextStatus": "${STATUS_NEXT[task.status as string] ?? "In Progress"}",
-  "reassignTo": "AR"
+  "reassignTo": "${userName}"
 }`;
 }
 
-function buildNovaPrompt(task: Record<string, unknown>, sprintContext: string): string {
-  return `You are Nova AI, an AI QA Reviewer in SoloDev — a Scrum project management tool.
+function buildNovaPrompt(task: Record<string, unknown>, sprintContext: string, userName: string): string {
+  return `You are Nova AI, an AI QA Reviewer in SoloSynq.ai — a Scrum project management tool.
 
-Atlas AI has planned this task. Review it from a quality and testing perspective before Arnas implements it.
+Atlas AI has planned this task. Review it from a quality and testing perspective before ${userName} implements it.
 
 TASK:
 - ID: ${task.id}
@@ -77,7 +77,7 @@ Respond ONLY with a JSON object:
   "risksIdentified": ["Specific risk to address"],
   "verdict": "ready_for_implementation",
   "nextStatus": "${STATUS_NEXT[task.status as string] ?? "Testing"}",
-  "reassignTo": "AR"
+  "reassignTo": "${userName}"
 }`;
 }
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "GEMINI_API_KEY not configured" }, { status: 500 });
   }
 
-  const { task, sprintContext } = await req.json();
+  const { task, sprintContext, userName = "the developer" } = await req.json();
 
   const agent = AGENT_ROLES[task.assignee as string];
   if (!agent) {
@@ -96,8 +96,8 @@ export async function POST(req: NextRequest) {
 
   const isAtlas = task.assignee === "AI";
   const prompt  = isAtlas
-    ? buildAtlasPrompt(task, sprintContext)
-    : buildNovaPrompt(task, sprintContext);
+    ? buildAtlasPrompt(task, sprintContext, userName)
+    : buildNovaPrompt(task, sprintContext, userName);
 
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,

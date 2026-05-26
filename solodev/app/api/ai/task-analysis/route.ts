@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
   const { task, sprintContext } = await req.json();
 
-  const prompt = `You are Atlas AI, a senior developer and Scrum master AI embedded in SoloDev — an AI-assisted Scrum platform for solo developers.
+  const prompt = `You are Atlas AI, a senior developer and Scrum master AI embedded in SoloSynq.ai — an AI-assisted Scrum platform for solo developers.
 
 A developer has opened a task and needs AI analysis to accelerate development.
 
