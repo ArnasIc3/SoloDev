@@ -1,32 +1,32 @@
 import type { TaskStatus } from "@/types";
 
 export const priorityStyles: Record<string, string> = {
-  High: "bg-red-500/15 text-red-400 border-red-500/25",
-  Medium: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-  Low: "bg-zinc-700/40 text-zinc-400 border-zinc-600/30",
+  High:   "bg-red-50 text-red-700 border-red-200",
+  Medium: "bg-amber-50 text-amber-700 border-amber-200",
+  Low:    "bg-gray-100 text-gray-500 border-gray-200",
 };
 
 export const assigneeColors: Record<string, string> = {
-  AR: "bg-violet-600",
+  AR: "bg-blue-600",
   AI: "bg-blue-600",
   NV: "bg-indigo-600",
 };
 
 export const columnDotColor: Record<TaskStatus, string> = {
-  "To Do": "bg-zinc-500",
-  "In Progress": "bg-blue-400",
-  Review: "bg-amber-400",
-  Testing: "bg-orange-400",
-  Done: "bg-green-400",
+  "To Do":       "bg-gray-400",
+  "In Progress": "bg-blue-500",
+  Review:        "bg-amber-500",
+  Testing:       "bg-orange-500",
+  Done:          "bg-green-500",
 };
 
 export const statCardColors = {
-  violet: "text-violet-400 bg-violet-500/10 border-violet-500/20",
-  blue: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-  indigo: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
-  green: "text-green-400 bg-green-500/10 border-green-500/20",
-  zinc: "text-zinc-300 bg-zinc-800/60 border-zinc-700/50",
+  violet: "text-blue-600 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700",
+  blue:   "text-blue-700 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700",
+  indigo: "text-indigo-700 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700",
+  green:  "text-green-700 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700",
+  zinc:   "text-gray-700 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700",
 };
 
 export const inputClass =
-  "w-full bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-violet-500 transition";
+  "w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition shadow-sm dark:shadow-none";

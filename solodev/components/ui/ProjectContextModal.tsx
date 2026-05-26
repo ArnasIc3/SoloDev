@@ -60,17 +60,17 @@ export function ProjectContextModal({ open, settings, onClose, onSave }: Project
   return (
     <Dialog.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-zinc-900 border border-zinc-700 rounded-2xl p-6 w-full max-w-lg shadow-2xl">
+        <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white border border-gray-200 rounded-2xl p-6 w-full max-w-lg shadow-xl">
 
           <div className="flex items-start justify-between mb-5">
             <div>
-              <Dialog.Title className="text-sm font-semibold text-zinc-100">Project Context</Dialog.Title>
-              <Dialog.Description className="text-[11px] text-zinc-500 mt-0.5">
+              <Dialog.Title className="text-sm font-semibold text-gray-900">Project Context</Dialog.Title>
+              <Dialog.Description className="text-[11px] text-gray-500 mt-0.5">
                 Tells AI agents what your project is — used in all sprint AI calls
               </Dialog.Description>
             </div>
-            <button onClick={onClose} className="text-zinc-500 hover:text-zinc-300 transition mt-0.5">
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition mt-0.5">
               <X size={15} />
             </button>
           </div>
@@ -78,86 +78,56 @@ export function ProjectContextModal({ open, settings, onClose, onSave }: Project
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1.5">Project Name</label>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="My Project"
-                  className={inputClass}
-                />
+                <label className="block text-[11px] text-gray-500 font-medium mb-1.5">Project Name</label>
+                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="My Project" className={inputClass} />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1.5">Domain / Industry</label>
-                <input
-                  value={domain}
-                  onChange={(e) => setDomain(e.target.value)}
-                  placeholder="e.g. E-commerce, SaaS, Mobile app"
-                  className={inputClass}
-                />
+                <label className="block text-[11px] text-gray-500 font-medium mb-1.5">Domain / Industry</label>
+                <input value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="e.g. E-commerce, SaaS" className={inputClass} />
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] text-zinc-400 mb-1.5">Tech Stack</label>
-              <input
-                value={techStack}
-                onChange={(e) => setTechStack(e.target.value)}
-                placeholder="e.g. Next.js 16, TypeScript, PostgreSQL, Stripe"
-                className={inputClass}
-              />
-              <p className="text-[10px] text-zinc-600 mt-1">Comma-separated list of technologies used</p>
+              <label className="block text-[11px] text-gray-500 font-medium mb-1.5">Tech Stack</label>
+              <input value={techStack} onChange={(e) => setTechStack(e.target.value)} placeholder="e.g. Next.js 16, TypeScript, PostgreSQL" className={inputClass} />
+              <p className="text-[10px] text-gray-400 mt-1">Comma-separated list of technologies used</p>
             </div>
 
             <div>
-              <label className="block text-[11px] text-zinc-400 mb-1.5">Project Description</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="What does the product do? Who is it for? What problem does it solve?"
-                rows={3}
-                className={`${inputClass} resize-none`}
-              />
+              <label className="block text-[11px] text-gray-500 font-medium mb-1.5">Project Description</label>
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does the product do? Who is it for? What problem does it solve?" rows={3} className={`${inputClass} resize-none`} />
             </div>
 
-            {/* AI Preview toggle */}
             <button
               type="button"
               onClick={() => setShowPreview((p) => !p)}
-              className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-zinc-300 transition"
+              className="flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-gray-700 transition"
             >
               <Eye size={11} />
               {showPreview ? "Hide" : "Preview"} what AI sees
             </button>
 
             {showPreview && (
-              <div className="bg-zinc-800/60 border border-zinc-700 rounded-xl p-3">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
                 <div className="flex items-center gap-1.5 mb-2">
-                  <Bot size={11} className="text-blue-400" />
-                  <span className="text-[10px] text-blue-400 font-medium">Sent to Atlas AI · Nova AI</span>
+                  <Bot size={11} className="text-blue-600" />
+                  <span className="text-[10px] text-blue-600 font-medium">Sent to Atlas · Nova</span>
                 </div>
                 {preview ? (
-                  <pre className="text-[11px] text-zinc-300 font-mono whitespace-pre-wrap leading-relaxed">
+                  <pre className="text-[11px] text-gray-700 font-mono whitespace-pre-wrap leading-relaxed">
                     {preview}
                   </pre>
                 ) : (
-                  <p className="text-[11px] text-zinc-600 italic">Fill in the fields above to see the AI context</p>
+                  <p className="text-[11px] text-gray-400 italic">Fill in the fields above to see the AI context</p>
                 )}
               </div>
             )}
 
             <div className="flex gap-3 pt-1">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 transition px-4 py-2 rounded-xl text-sm font-medium"
-              >
+              <button type="button" onClick={onClose} className="flex-1 bg-gray-100 hover:bg-gray-200 transition px-4 py-2 rounded-lg text-sm font-medium text-gray-700">
                 Cancel
               </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="flex-1 bg-violet-600 hover:bg-violet-500 disabled:opacity-60 transition px-4 py-2 rounded-xl text-sm font-medium"
-              >
+              <button type="submit" disabled={saving} className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition px-4 py-2 rounded-lg text-sm font-medium text-white">
                 {saving ? "Saving..." : "Save Context"}
               </button>
             </div>

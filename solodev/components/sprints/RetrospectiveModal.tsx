@@ -61,45 +61,45 @@ export function RetrospectiveModal({ sprint, tasks, teamMembers, onClose }: Retr
   return (
     <Dialog.Root open={!!sprint} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+        <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white border border-gray-200 rounded-2xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col shadow-xl">
 
           {/* Header */}
-          <div className="flex items-start justify-between p-6 border-b border-zinc-800 flex-shrink-0">
+          <div className="flex items-start justify-between p-6 border-b border-gray-100 flex-shrink-0">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Bot size={14} className="text-blue-400" />
-                <span className="text-[11px] text-blue-400 font-medium">AI Retrospective · Atlas AI</span>
+                <Bot size={14} className="text-blue-600" />
+                <span className="text-[11px] text-blue-600 font-medium">AI Retrospective · Atlas</span>
               </div>
-              <Dialog.Title className="text-sm font-semibold text-zinc-100">{sprint?.name}</Dialog.Title>
-              <Dialog.Description className="text-[11px] text-zinc-500 mt-0.5">{sprint?.goal}</Dialog.Description>
+              <Dialog.Title className="text-sm font-semibold text-gray-900">{sprint?.name}</Dialog.Title>
+              <Dialog.Description className="text-[11px] text-gray-500 mt-0.5">{sprint?.goal}</Dialog.Description>
             </div>
-            <button onClick={onClose} className="text-zinc-500 hover:text-zinc-300 transition mt-0.5 flex-shrink-0">
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition mt-0.5 flex-shrink-0">
               <X size={15} />
             </button>
           </div>
 
           {/* Metrics row */}
-          <div className="flex items-center gap-4 px-6 py-3 border-b border-zinc-800 flex-shrink-0">
+          <div className="flex items-center gap-4 px-6 py-3 border-b border-gray-100 bg-gray-50 flex-shrink-0">
             <div className="text-center">
-              <p className="text-lg font-bold text-zinc-100">{pct}%</p>
-              <p className="text-[10px] text-zinc-500">Completion</p>
+              <p className="text-lg font-bold text-gray-900">{pct}%</p>
+              <p className="text-[10px] text-gray-500">Completion</p>
             </div>
-            <div className="w-px h-8 bg-zinc-800" />
+            <div className="w-px h-8 bg-gray-200" />
             <div className="text-center">
-              <p className="text-lg font-bold text-zinc-100">{doneCt}/{tasks.length}</p>
-              <p className="text-[10px] text-zinc-500">Tasks done</p>
+              <p className="text-lg font-bold text-gray-900">{doneCt}/{tasks.length}</p>
+              <p className="text-[10px] text-gray-500">Tasks done</p>
             </div>
-            <div className="w-px h-8 bg-zinc-800" />
+            <div className="w-px h-8 bg-gray-200" />
             <div className="text-center">
-              <p className="text-lg font-bold text-zinc-100">{doneSP}/{totalSP}</p>
-              <p className="text-[10px] text-zinc-500">Story points</p>
+              <p className="text-lg font-bold text-gray-900">{doneSP}/{totalSP}</p>
+              <p className="text-[10px] text-gray-500">Story points</p>
             </div>
             <div className="flex-1" />
             <button
               onClick={generateRetro}
               disabled={loading}
-              className="text-[10px] text-zinc-500 hover:text-zinc-300 transition flex items-center gap-1 disabled:opacity-40"
+              className="text-[10px] text-gray-500 hover:text-gray-700 transition flex items-center gap-1 disabled:opacity-40"
             >
               <Zap size={10} />
               Regenerate
@@ -110,74 +110,69 @@ export function RetrospectiveModal({ sprint, tasks, teamMembers, onClose }: Retr
           <div className="flex-1 overflow-y-auto p-6 space-y-5">
             {loading && (
               <div className="flex flex-col items-center justify-center py-12 gap-3">
-                <Loader2 size={24} className="animate-spin text-blue-400" />
-                <p className="text-[11px] text-zinc-500">Atlas AI is writing the retrospective...</p>
+                <Loader2 size={24} className="animate-spin text-blue-600" />
+                <p className="text-[11px] text-gray-500">Atlas is writing the retrospective...</p>
               </div>
             )}
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-[11px] text-red-400">{error}</div>
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-[11px] text-red-700">{error}</div>
             )}
 
             {retro && !loading && (
               <>
-                {/* Summary */}
-                <div className="bg-zinc-800 border border-zinc-700/60 rounded-xl p-4">
-                  <p className="text-[11px] text-zinc-300 leading-relaxed">{retro.summary}</p>
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                  <p className="text-[11px] text-gray-700 leading-relaxed">{retro.summary}</p>
                   {retro.velocityNote && (
-                    <p className="text-[10px] text-zinc-500 mt-2 italic">{retro.velocityNote}</p>
+                    <p className="text-[10px] text-gray-400 mt-2 italic">{retro.velocityNote}</p>
                   )}
                 </div>
 
-                {/* What went well */}
                 <div>
-                  <h4 className="text-[11px] font-semibold text-zinc-300 mb-2 flex items-center gap-2">
-                    <CheckCircle size={12} className="text-green-400" /> What went well
+                  <h4 className="text-[11px] font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <CheckCircle size={12} className="text-green-600" /> What went well
                   </h4>
                   <div className="space-y-1.5">
                     {retro.wentWell.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[11px] text-zinc-400">
-                        <span className="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                      <div key={i} className="flex items-start gap-2 text-[11px] text-gray-600">
+                        <span className="text-green-600 mt-0.5 flex-shrink-0">✓</span>
                         <span>{item}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Improvements */}
                 <div>
-                  <h4 className="text-[11px] font-semibold text-zinc-300 mb-2 flex items-center gap-2">
-                    <AlertCircle size={12} className="text-amber-400" /> Areas to improve
+                  <h4 className="text-[11px] font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <AlertCircle size={12} className="text-amber-600" /> Areas to improve
                   </h4>
                   <div className="space-y-1.5">
                     {retro.improvements.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[11px] text-zinc-400">
-                        <span className="text-amber-400 mt-0.5 flex-shrink-0">△</span>
+                      <div key={i} className="flex items-start gap-2 text-[11px] text-gray-600">
+                        <span className="text-amber-600 mt-0.5 flex-shrink-0">△</span>
                         <span>{item}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* AI Contribution */}
                 {retro.aiContribution && (
-                  <div className="bg-blue-500/8 border border-blue-500/20 rounded-xl p-3">
-                    <p className="text-[10px] text-blue-400 font-medium mb-1.5 flex items-center gap-1.5">
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
+                    <p className="text-[10px] text-blue-600 font-medium mb-1.5 flex items-center gap-1.5">
                       <Bot size={10} /> AI Team Contribution
                     </p>
-                    <p className="text-[11px] text-zinc-300 leading-relaxed">{retro.aiContribution}</p>
+                    <p className="text-[11px] text-gray-700 leading-relaxed">{retro.aiContribution}</p>
                   </div>
                 )}
 
-                {/* Next sprint */}
                 <div>
-                  <h4 className="text-[11px] font-semibold text-zinc-300 mb-2 flex items-center gap-2">
-                    <TrendingUp size={12} className="text-violet-400" /> Next sprint focus
+                  <h4 className="text-[11px] font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <TrendingUp size={12} className="text-blue-600" /> Next sprint focus
                   </h4>
                   <div className="space-y-1.5">
                     {retro.nextSprintFocus.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[11px] text-zinc-400">
-                        <span className="text-violet-400 mt-0.5 flex-shrink-0">→</span>
+                      <div key={i} className="flex items-start gap-2 text-[11px] text-gray-600">
+                        <span className="text-blue-600 mt-0.5 flex-shrink-0">→</span>
                         <span>{item}</span>
                       </div>
                     ))}

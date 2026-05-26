@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SoloDev – AI-assisted task management",
-  description: "Sprint board and task management for solo developers powered by AI",
+  title: "SoloSynq.ai — AI-assisted Scrum for solo developers",
+  description: "AI-powered sprint management platform. Your AI sprint team handles planning, QA, and workflow — so you can focus on shipping.",
 };
 
 export default function RootLayout({
@@ -25,9 +26,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="h-full bg-zinc-950">{children}</body>
+      <head>
+        {/* Apply saved theme before first paint to avoid flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(localStorage.getItem('theme')==='dark'){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="h-full bg-[#F5F7FB] dark:bg-gray-950">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
