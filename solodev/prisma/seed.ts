@@ -13,7 +13,7 @@ async function main() {
 
   await prisma.teamMember.createMany({
     data: [
-      { id: "AR", initials: "AR", name: "Arnas", role: "Developer", isAI: false, color: "bg-violet-600" },
+      { id: "AR", initials: "AR", name: "Arnas", role: "Developer", isAI: false, color: "bg-blue-600" },
       { id: "AI", initials: "AI", name: "Atlas", role: "AI Developer", isAI: true, color: "bg-blue-600" },
       { id: "NV", initials: "NV", name: "Nova", role: "AI Reviewer", isAI: true, color: "bg-indigo-600" },
     ],

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
 
 function formatSprint(s: {
   id: number;
@@ -22,11 +23,25 @@ function formatSprint(s: {
 }
 
 export async function GET() {
-  const sprints = await prisma.sprint.findMany({ orderBy: { id: "asc" } });
-  return NextResponse.json({ sprints: sprints.map(formatSprint) });
+  try {
+    const session = await getSession();
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const sprints = await prisma.sprint.findMany({
+      where: { userId: session.userId },
+      orderBy: { id: "asc" },
+    });
+    return NextResponse.json({ sprints: sprints.map(formatSprint) });
+  } catch (err) {
+    console.error("[sprints GET]", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const body = await req.json();
   const { name, shortName, goal, startDate, endDate } = body;
 
@@ -42,6 +57,7 @@ export async function POST(req: NextRequest) {
       startDate: startDate ? new Date(startDate) : null,
       endDate: endDate ? new Date(endDate) : null,
       status: "planned",
+      userId: session.userId,
     },
   });
 

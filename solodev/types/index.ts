@@ -42,3 +42,29 @@ export interface AISuggestion {
   title: string;
   description: string;
 }
+
+export type SprintRecommendationVerdict =
+  | "fits-current"
+  | "too-large"
+  | "wrong-sprint"
+  | "overloaded"
+  | "backlog"
+  | "planned-sprint";
+
+export interface SprintRecommendation {
+  verdict: SprintRecommendationVerdict;
+  label: string;
+  reasoning: string;
+  suggestedSprintId: number | null;
+  suggestedSprintName: string | null;
+}
+
+export interface AITaskSuggestion {
+  id: string;
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  storyPoints: number;
+  reasoning: string;
+  recommendation: SprintRecommendation;
+}

@@ -18,6 +18,7 @@ model Task {
   sprintId    Int?
   sprint      Sprint?  @relation(fields: [sprintId], references: [id])
   aiOutput    String?
+  userId      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -31,6 +32,7 @@ model Sprint {
   endDate   DateTime?
   status    String    @default("planned")
   tasks     Task[]
+  userId    String?
   createdAt DateTime  @default(now())
 }
 
@@ -51,6 +53,7 @@ model Meeting {
   taskTitle   String?
   sprintName  String?
   messages    String
+  userId      String?
   createdAt   DateTime @default(now())
 }
 
@@ -60,5 +63,6 @@ model ProjectSettings {
   techStack   String   @default("")
   domain      String   @default("")
   description String   @default("")
+  userId      String?  @unique
   updatedAt   DateTime @updatedAt
 }
