@@ -1,7 +1,7 @@
 "use client";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
-import type { Task, TaskStatus } from "@/types";
+import type { Task, TaskStatus, TeamMember } from "@/types";
 import { BoardColumn } from "./BoardColumn";
 
 const COLUMNS: TaskStatus[] = [
@@ -14,12 +14,13 @@ const COLUMNS: TaskStatus[] = [
 
 interface SprintBoardProps {
   tasks: Task[];
+  teamMembers?: TeamMember[];
   onMoveTask: (taskId: string, status: TaskStatus) => void;
   onTaskClick: (task: Task) => void;
   processingTaskIds?: Set<string>;
 }
 
-export function SprintBoard({ tasks, onMoveTask, onTaskClick, processingTaskIds }: SprintBoardProps) {
+export function SprintBoard({ tasks, teamMembers, onMoveTask, onTaskClick, processingTaskIds }: SprintBoardProps) {
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     const newStatus = result.destination.droppableId as TaskStatus;
@@ -35,6 +36,7 @@ export function SprintBoard({ tasks, onMoveTask, onTaskClick, processingTaskIds 
             key={status}
             status={status}
             tasks={tasks.filter((t) => t.status === status)}
+            teamMembers={teamMembers}
             onMoveTask={onMoveTask}
             onTaskClick={onTaskClick}
             processingTaskIds={processingTaskIds}
